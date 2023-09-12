@@ -1,0 +1,26 @@
+<div>
+    <div class="text-capitalize">
+        <span class="font-weight-bold">{{ object.title }}</span>
+        {% if object.color !=  None %}
+            ({{ object.color }})
+        {% endif %}
+    </div>
+    <ul>
+        <li class="text-muted small font-weight-normal"> {{ object.category.name }}</li>
+        {% if object.category.name == 'Mobile' %}
+            {% with obj_details=object.mobile_set.get%}
+                <li class="text-muted small font-weight-normal">{{ obj_details.ram|floatformat|default_if_none:"0" }} GB
+                    RAM
+                    | {{ obj_details.internal_storage|floatformat|default_if_none:"0" }} GB ROM
+                </li>
+            {% endwith %}
+        {% elif object.category.name == 'Laptop' %}
+            {% with obj_details=object.laptop_set.get %}
+                <li class="text-muted small font-weight-normal">{{ obj_details.ram|floatformat|default_if_none:"0" }} GB
+                    RAM
+                    | {{ obj_details.internal_storage|floatformat|default_if_none:"0" }} GB ROM
+                </li>
+            {% endwith %}
+        {% endif %}
+    </ul>
+</div>

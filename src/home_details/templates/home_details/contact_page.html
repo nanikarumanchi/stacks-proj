@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container my-3">
+        <div class="row mb-2 p-2">
+            <!-- title -->
+            <div class="col-lg-4 col-sm-6 mx-auto">
+                <h2>Contact</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 mx-auto">
+                <form method="post"> {% csrf_token %}
+                    <div>
+                         {{ form }}
+                        <button type="submit" class="btn btn-block bg-dark text-white font-weight-bold">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

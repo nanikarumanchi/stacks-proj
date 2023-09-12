@@ -1,0 +1,7 @@
+<hr>
+<form class="" method="post" action="{% url 'addresses:create_address' %}">{% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.build_absolute_uri }}">
+    <input type="hidden" name="address_type" value="{{ address_type }}">
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>

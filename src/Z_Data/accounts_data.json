@@ -1,0 +1,78 @@
+[
+{
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$HZJUdphc86Xw$3y4G78+vBsI8mrgHOHG7YGnc4AMk6BNu7IxI4ZMYQNU=",
+        "last_login": "2019-12-25T07:32:44.716Z",
+        "first_name": "",
+        "last_name": "",
+        "date_joined": "2019-12-22T10:50:24Z",
+        "email": "pinnam@gmail.com",
+        "username": "padmaraju",
+        "is_active": true,
+        "is_staff": true,
+        "is_superuser": true,
+        "timestamp": "2019-12-22T10:50:25.134Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$lH3STNJN79ot$JgymVwXiRUzGDfjMl1T2cOPAI2d2IRA5gcLCTeQw7Sw=",
+        "last_login": "2019-12-22T20:27:57.826Z",
+        "first_name": "",
+        "last_name": "",
+        "date_joined": "2019-12-22T14:14:05.929Z",
+        "email": "nani1@gmail.com",
+        "username": "nani1",
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false,
+        "timestamp": "2019-12-22T14:14:06.236Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$LBpFIgq0ooyg$8gExnurVRTSGB1Iuwkx+9Uz2/U3WoN4Xd2S8X0i8ylA=",
+        "last_login": null,
+        "first_name": "",
+        "last_name": "",
+        "date_joined": "2019-12-22T14:21:28Z",
+        "email": "nani2@gmail.com",
+        "username": "nani2",
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false,
+        "timestamp": "2019-12-22T14:21:28.660Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 9,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$8yir1zh0NumB$MhaD/1ByIL2Ifyq3IFGzttxI8skLTtUNTXOKfnDdtGI=",
+        "last_login": null,
+        "first_name": "",
+        "last_name": "",
+        "date_joined": "2019-12-22T20:32:03.020Z",
+        "email": "nani5@gmail.com",
+        "username": "nani5",
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false,
+        "timestamp": "2019-12-22T20:32:03.358Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

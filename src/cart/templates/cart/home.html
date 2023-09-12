@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-8 mx-auto">
+                {% if cart.products.count > 0 %}
+                    <table class="table cart-table">
+                        <thead>
+                        <tr>
+                            <th> Name</th>
+                            <th> Price</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="cart-body">
+
+                        {% for product in cart.products.all %}
+                            <tr class="cart-product">
+                                <td><a href="{{ product.get_absolute_url }}"> {{ product.title }}</a></td>
+                                <td>{{ product.final_price }}</td>
+                                <td>
+                                    {% include 'products/snippets/product_remove_cart.html' with object=product %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>SubTotal: <span class="cart-subtotal">{{ cart.subtotal }}</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td>Total: <span class="cart-total">{{ cart.total }}</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td><a href="{% url 'cart:checkout' %}" class="btn btn-primary">Checkout</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                {% else %}
+                    <h4 class="display-4">Your cart is empty</h4>
+                {% endif %}
+        </div>
+    </div>
+    <div class="cart-item-remove-form" style="display: none">
+        {% include 'products/snippets/product_remove_cart.html'  %}
+    </div>
+
+{% endblock %}

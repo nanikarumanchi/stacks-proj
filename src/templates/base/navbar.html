@@ -1,0 +1,114 @@
+{% load static %}
+{% url 'home_detail:home_detail_home' as home_url %}
+{% url 'home_detail:home_detail_contact' as contact_utl %}
+{% url 'account:account_login' as login_url %}
+{% url 'account:account_logout' as logout_url %}
+{% url 'account:account_register' as register_url %}
+{% url 'products:list' as products_url %}
+{% url 'cart:home' as cart_home_url %}
+
+<!-- navbar -->
+<nav class="navbar navbar-expand-lg fixed-top nav-menu">
+    <div class="container-lg">
+        <a href="#" class="navbar-brand text-white text-capitalize h2 font-weight-bold">Stacks</a>
+        <button class="navbar-toggler nav-button-tog" type="button" data-toggle="collapse" data-target="#my-navbar">
+            <div class="bg-dark line1"></div>
+            <div class="bg-dark line2"></div>
+            <div class="bg-dark line3"></div>
+        </button>
+
+
+        <div class="collapse navbar-collapse justify-content-lg-center text-capitalize font-weight-bold" id="my-navbar">
+            <form class="form-inline search-form mr-5 float-left" action="{% url 'search:query' %}">
+                <input type="text" aria-label="search" placeholder="Search for products"
+                       class="form-control search-input" name="q" value="{{ request.GET.q }}">
+                <span class="input-group-prepend">
+                    <button type="submit" class="btn search-btn" style="margin-left: -50px"><i
+                            class="fas fa-search"></i></button>
+                </span>
+            </form>
+            <ul class="navbar-nav ">
+                <li class="nav-item m-2 menu-item">
+                    <a class="nav-link text-white" href="{{ products_url }}">
+                        Products
+                    </a>
+                </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item m-2 menu-item">
+                        <a class="nav-link text-white" href="{{ logout_url }}">
+                            {{ request.user.username |capfirst }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item m-2 menu-item">
+                        <a class="nav-link text-white" href="#" data-toggle="modal" data-target="#lr-modal">Login &
+                            Register</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item m-2 menu-item">
+                    <a class="nav-link text-white" href="{{ cart_home_url }}">
+                        <span class="navbar-cart-count">{{ count_item_count }}</span>
+                        <i class="fa fa-shopping-cart text-warning"></i>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+<!-- end of navbar -->
+
+<!-- modal  -->
+<div class="modal" id="lr-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-4 bg-info p-4 text-center">
+                    <i class="fa fa-cart-plus fa-4x text-white"></i>
+                    <h3 class="display-4 my-5"><span class="login">Login </span><span class="regis">Register </span>
+                    </h3>
+                </div>
+                <div class="col-8 lr-form">
+                    <button class="close text-white" data-dismiss="modal">&times;</button>
+                    <div class="p-2 login">
+                        <form class="nav-form" method="post" action="{{ login_url }}">{% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+                            {% for field in login_form %}
+                                <div class="form-group py-4 mb-5">
+                                    {{ field }}
+                                    <label class="label text-white" for="{{ field.name }}">{{ field.label }}</label>
+                                </div>
+                            {% endfor %}
+                            <button type="submit"
+                                    class="btn btn-block p-2 text-white font-weight-bold text-uppercase submit-button">
+                                Login
+                            </button>
+                        </form>
+                    </div>
+                    <div class="p-2 regis">
+                        <form class="nav-form" method="post" action="{{ register_url }}">{% csrf_token %}
+                            {% for field in registration_form %}
+                                <div class="form-group py-4 mb-5">
+                                    {{ field }}
+                                    <label class="label text-white" for="{{ field.name }}">{{ field.label }}</label>
+                                </div>
+                            {% endfor %}
+                            <button type="submit"
+                                    class="btn btn-block p-2 text-white font-weight-bold text-uppercase submit-button">
+                                Register
+                            </button>
+                        </form>
+                    </div>
+                    <div class=" py-3">
+                        <button class="btn btn-block bg-warning font-weight-bold m-tog-button p-3 mt-5 ">
+                            <span class="login">Register </span>
+                            <span class="regis">Login </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end of modal -->

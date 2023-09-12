@@ -1,0 +1,198 @@
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+<script src="https://kit.fontawesome.com/e78da1fef3.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'js/base.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        let loginDiv = $('.login');
+        let registerDiv = $('.regis');
+        let toggleLogRegButton = $('.m-tog-button');
+        registerDiv.hide();
+        toggleLogRegButton.click(function () {
+            $('.login, .regis').toggle()
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        let productFormUpdate = $('.form-product-update-ajax');
+        productFormUpdate.submit(function (event) {
+            event.preventDefault();
+            let thisForm = $(this);
+            let actionEndPoint = thisForm.attr('action');
+            let httpMethod = thisForm.attr('method');
+
+            let formData = thisForm.serialize();
+            $.ajax({
+                url: actionEndPoint,
+                method: httpMethod,
+                data: formData,
+                success: function (data) {
+                    let buttonProductUpdate = thisForm.find('.submit-product-update');
+                    if (data.added) {
+                        buttonProductUpdate.html('' +
+                            ' <button type="submit" ' +
+                            'class="btn btn-block py-3 text-dark text-capitalize font-weight-bold cart-btn-re">' +
+                            'Remove' +
+                            '</button>'
+                        );
+                    } else {
+                        buttonProductUpdate.html('' +
+                            ' <button type="submit" ' +
+                            'class="btn btn-block py-3 text-dark text-capitalize font-weight-bold cart-btn-ad">' +
+                            'Add to cart' +
+                            '</button>');
+                    }
+                    let navbarCartCount = $('.navbar-cart-count');
+                    navbarCartCount.text(data.cart_item_count);
+                    let currentPath = window.location.href;
+                    if (currentPath.indexOf('cart') !== -1) {
+                        updateCart()
+                    }
+                },
+                error: function (errorData) {
+                    console.log(errorData)
+                },
+            });
+        });
+
+        function updateCart() {
+            let cartTable = $('.cart-table');
+            let cartBody = cartTable.find('.cart-body');
+            let cartProduct = cartBody.find('.cart-product');
+            let currentUrl = window.location.href;
+            let updateCartUrl = '/cart/api/';
+            let updateCartMethod = 'GET';
+            let data = {};
+            $.ajax({
+                url: updateCartUrl,
+                method: updateCartMethod,
+                data: data,
+                success: function (data) {
+                    let hiddenFormProductRemove = $('.cart-item-remove-form');
+                    if (data.product.length > 0) {
+                        cartProduct.html('');
+                        $.each(data.product, function (index, value) {
+                            let newCartItemRemoveClone = hiddenFormProductRemove.clone();
+                            newCartItemRemoveClone.css('display', 'block');
+                            newCartItemRemoveClone.find('.catt-item-product-id').val(value.id);
+                            cartBody.prepend('' +
+                                ' <tr class="cart-product">\n' +
+                                '<td><a href="' + value.url + '"> ' + value.name + '</a></td>\n' +
+                                '<td> ' + value.price + '</td>\n' +
+                                '<td>' + newCartItemRemoveClone.html() + '</td>' +
+                                '</tr>');
+                        });
+                        cartBody.find('.cart-subtotal').text(data.cart_subtotal);
+                        cartBody.find('.cart-total').text(data.cart_total);
+                    } else {
+                        window.location.href = currentUrl
+                    }
+                },
+                error: function (errorData) {
+                    console.log(errorData)
+                }
+            })
+        }
+    })
+</script>
+
+<!-- Strip js -->
+<script>
+        // Create a Stripe client.
+        let stripe = Stripe('pk_test_Y2xruzYt8ElRlr4iG55yCavU00Y2QXIutF');
+
+        // Create an instance of Elements.
+        let elements = stripe.elements();
+
+        // Custom styling can be passed to options when creating an Element.
+        // (Note that this demo uses a wider set of styles than the guide below.)
+        let style = {
+            base: {
+                color: '#32325d',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        };
+
+        // Create an instance of the card Element.
+        let card = elements.create('card', {style: style});
+
+        // Add an instance of the card Element into the `card-element` <div>.
+        card.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element.
+        card.addEventListener('change', function (event) {
+            let displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission.
+        let form = document.getElementById('payment-form');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function (result) {
+                if (result.error) {
+                    // Inform the user if there was an error.
+                    let errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    // Send the token to your server.
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+
+        // Submit the form with the token ID.
+        function stripeTokenHandler(token) {
+            // Insert the token ID into the form so it gets submitted to the server
+            let form = document.getElementById('payment-form');
+            let hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripeToken');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+
+            // Submit the form
+            form.submit();
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

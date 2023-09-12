@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block custom_css %}
+    <style>
+        .cart-btn-ad, .cart-btn-go, .cart-btn-re {
+            border-radius: 0;
+        }
+
+        .cart-btn-go {
+            background-color: rgba(88, 225, 92, 0.91);
+        }
+
+        .cart-btn-ad {
+            background-color: rgba(202, 193, 56, 0.91);
+        }
+
+        .cart-btn-re {
+            background-color: rgba(252,95,41,0.91);
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-12">
+                                 <img src="{{ object.main_image.url }}" alt="" class="img-fluid">
+                            </div>
+
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-5 m-lg-0 m-2 ">
+                                <a href="{% url 'cart:home' %}" class="btn btn-block py-3 text-dark text-capitalize font-weight-bold cart-btn-go">
+                                    Go to
+                                    cart
+                                </a>
+                            </div>
+                            <div class="col-lg-5 m-lg-0 m-2 ">
+                                {% include 'products/snippets/cart_update.html' with cart=cart object=object %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if object.category.name == 'Mobile' %}
+                        {% with obj_details=object.mobile_set.get %}
+                            <div class="col-8">
+                                <h4 class="font-weight-bold">{{ obj_details.name }}
+                                    <span class="small text-muted">({{ obj_details.color }})</span>
+                                </h4>
+                            </div>
+                        {% endwith %}
+                    {% elif object.category.name == 'Laptop' %}
+                        {% with obj_details=object.laptop_set.get %}
+                            <div class="col-8">
+                                {{ obj_details.ram }}
+                            </div>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

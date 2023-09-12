@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block custom_css %}
+    <style>
+        .checkout-form {
+            background-color: rgba(96, 121, 52, 0.64);
+            box-shadow: 2px 4px rgba(109, 109, 113, 0.29);
+            border-radius: 20px;
+        }
+
+        ::placeholder {
+            color: #eee;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+        <div class="row mt-4 mx-auto">
+            {% if not billing_profile %}
+                <div class="col-5 checkout-form p-5 m-2">
+                    <p class="lead">Login </p>
+                    <form action="{% url 'account:account_login' %}" method="post">{% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.build_absolute_uri }}">
+                        {{ login_form }}
+                        <button type="submit"
+                                class="btn btn-block mt-2 p-2 text-white font-weight-bold text-uppercase submit-button">
+                            Login
+                        </button>
+                    </form>
+
+                </div>
+                <div class="col-5 checkout-form p-5 m-2">
+                    <p class="lead"> Continue as Guest </p>
+                    <form action="{% url 'account:account_guest' %}" method="post">{% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.build_absolute_uri }}">
+                        {{ guest_form }}
+                        <button type="submit"
+                                class="btn btn-block mt-2 p-2 text-white font-weight-bold text-uppercase submit-button">
+                            Continue
+                        </button>
+                    </form>
+                </div>
+            {% else %}
+
+                {% if not object.shipping_address %}
+                    <div class="col-8 mx-auto mt-3">
+                        <div class="lead">Shipping Address</div>
+                        {% include 'addresses/snippets/address_form.html' with form=address_form address_type='shipping' %}
+                    </div>
+                {% elif not object.billing_address %}
+                    <div class="col-8 mx-auto mt-3">
+                        <div class="lead">Billing Address</div>
+                        {% include 'addresses/snippets/address_form.html' with form=address_form address_type='billing' %}
+                    </div>
+                {% else %}
+                    <div class="col-8">
+                        <h1>Checkout</h1>
+                        Order ID : {{ object.order_id }}<br>
+                        Total : {{ object.cart.total }}<br>
+                        Shipping charges : {{ object.shipping_charges }}<br>
+                        Final Total : {{ object.total }}<br>
+                        <form method="post"> {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Pay {{ object.total|floatformat }}</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
